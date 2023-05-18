@@ -19,4 +19,8 @@ public class AuthService {
         User user = userService.findByEmailAndPassword(authRequest.getEmail(), authRequest.getPassword());
         return jwtService.generateToken(user);
     }
+
+    public JwtToken decodeToken(final String token) {
+        return jwtService.decodeToken(token);
+    }
 }

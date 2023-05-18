@@ -1,3 +1,10 @@
 spring:
   application:
     name: notification-service
+  datasource:
+    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    url": "jdbc:mysql://localhost:3306/test"
+    password: "root"
+    username": "root"
+  flyway:
+    enabled: true

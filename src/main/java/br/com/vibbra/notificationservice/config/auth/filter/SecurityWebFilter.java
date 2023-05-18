@@ -1,12 +1,15 @@
-package br.com.vibbra.notificationservice.filter;
+package br.com.vibbra.notificationservice.config.auth.filter;
 
-import br.com.vibbra.notificationservice.auth.Secured;
+import br.com.vibbra.notificationservice.config.auth.Secured;
 import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.exceptions.ExpiredTokenException;
 import br.com.vibbra.notificationservice.exceptions.HttpException;
+import br.com.vibbra.notificationservice.exceptions.InternalServerErrorException;
 import br.com.vibbra.notificationservice.exceptions.InvalidTokenException;
+import br.com.vibbra.notificationservice.exceptions.SimpleError;
 import br.com.vibbra.notificationservice.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +20,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -65,22 +69,27 @@ public class SecurityWebFilter extends OncePerRequestFilter {
             }
             token = StringUtils.substring(token, 7);
 
-            boolean tokenExpired = authService.isTokenExpired(token);
-            if (tokenExpired) {
-                throw new ExpiredTokenException();
-            }
-
-            JwtToken userToken = authService.getUserToken(token);
+            JwtToken userToken = authService.decodeToken(token);
             servletContext.setAttribute("jwtToken", userToken);
 
             chain.doFilter(req, res);
+        } catch (ExpiredJwtException e){
+            logger.error("Token expirado", e);
+            ExpiredTokenException error = new ExpiredTokenException();
+            res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            res.getWriter().append(objectMapper.writeValueAsString(error.getError()));
+            res.setStatus(error.getStatus().value());
         } catch (HttpException e) {
             logger.error("Erro ao validar o token", e);
             res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             res.getWriter().append(objectMapper.writeValueAsString(e.getError()));
             res.setStatus(e.getStatus().value());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            logger.error("Erro ao validar o token", e);
+            InternalServerErrorException error = new InternalServerErrorException(e, e.getMessage());
+            res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+            res.getWriter().append(objectMapper.writeValueAsString(error.getError()));
+            res.setStatus(error.getStatus().value());
         }
     }
 }

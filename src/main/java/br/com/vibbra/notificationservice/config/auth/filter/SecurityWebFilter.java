@@ -6,7 +6,6 @@ import br.com.vibbra.notificationservice.exceptions.ExpiredTokenException;
 import br.com.vibbra.notificationservice.exceptions.HttpException;
 import br.com.vibbra.notificationservice.exceptions.InternalServerErrorException;
 import br.com.vibbra.notificationservice.exceptions.InvalidTokenException;
-import br.com.vibbra.notificationservice.exceptions.SimpleError;
 import br.com.vibbra.notificationservice.service.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,7 +19,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -73,7 +71,7 @@ public class SecurityWebFilter extends OncePerRequestFilter {
             servletContext.setAttribute("jwtToken", userToken);
 
             chain.doFilter(req, res);
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             logger.error("Token expirado", e);
             ExpiredTokenException error = new ExpiredTokenException();
             res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

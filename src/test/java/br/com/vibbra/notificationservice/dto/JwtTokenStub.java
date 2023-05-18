@@ -16,9 +16,6 @@ public class JwtTokenStub {
     }
 
     private static UserToken createUser() {
-        return UserToken.builder()
-                .email("valid@email.com")
-                .id(123L)
-                .build();
+        return UserToken.builder().email("valid@email.com").id(123L).build();
     }
 }

@@ -104,6 +104,41 @@ class UserServiceTest {
     }
 
     @Test
+    public void shouldReturnUserWhenFindByIdReturnUser() {
+        Long userId = 123L;
+        UserEntity entity = UserEntityStub.create();
+
+        when(repository.findById(userId)).thenReturn(Optional.of(entity));
+
+        User response = service.findUserById(userId);
+
+        assertAll(
+                () -> assertEquals(entity.getId(), response.getId()),
+                () -> assertNotNull(response.getId()),
+                () -> assertEquals(entity.getName(), response.getName()),
+                () -> assertNotNull(response.getName()),
+                () -> assertEquals(entity.getEmail(), response.getEmail()),
+                () -> assertNotNull(response.getEmail()),
+                () -> assertEquals(entity.getPassword(), response.getPassword()),
+                () -> assertNotNull(response.getPassword()),
+                () -> assertEquals(entity.getCompanyAddress(), response.getCompanyAddress()),
+                () -> assertNotNull(response.getCompanyAddress()),
+                () -> assertEquals(entity.getCompanyName(), response.getCompanyName()),
+                () -> assertNotNull(response.getCompanyName()),
+                () -> assertEquals(entity.getPhoneNumber(), response.getPhoneNumber()),
+                () -> assertNotNull(response.getPhoneNumber()));
+    }
+
+    @Test
+    public void shouldThrowErrorUserWhenFindByIdNotFindUser() {
+        Long userId = 123L;
+
+        when(repository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> service.findUserById(userId));
+    }
+
+    @Test
     public void shouldReturnUserAlreadyExistsWhenEmailExistsInDb() {
         CreateUserRequest reques = CreateUserRequestStub.create();
 

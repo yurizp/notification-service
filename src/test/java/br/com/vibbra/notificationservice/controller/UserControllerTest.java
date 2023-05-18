@@ -1,5 +1,13 @@
 package br.com.vibbra.notificationservice.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.vibbra.notificationservice.config.GlobalExceptionHandler;
 import br.com.vibbra.notificationservice.dto.User;
 import br.com.vibbra.notificationservice.dto.UserStub;
@@ -16,13 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     private static MockMvc mockMvc;
@@ -38,7 +39,6 @@ class UserControllerTest {
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
-
 
     @Test
     public void shouldCreateUser() throws Exception {
@@ -74,8 +74,26 @@ class UserControllerTest {
                         .content("{}")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(validationException.getStatus().value()))
-                .andExpect(content().string(input));
+                .andExpect(content().json(input));
     }
 
+    @Test
+    public void shouldReturnUserById() throws Exception {
+        User user = UserStub.create();
 
+        when(userService.findUserById(any())).thenReturn(user);
+
+        mockMvc.perform(get(BASE_URI.concat("/1"))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.id").value(user.getId()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
+                .andExpect(jsonPath("$.password").doesNotExist())
+                .andExpect(jsonPath("$.name").value(user.getName()))
+                .andExpect(jsonPath("$.phone_number").value(user.getPhoneNumber()))
+                .andExpect(jsonPath("$.company_name").value(user.getCompanyName()))
+                .andExpect(jsonPath("$.company_address").value(user.getCompanyAddress()));
+    }
 }

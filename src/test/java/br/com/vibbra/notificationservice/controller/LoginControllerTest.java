@@ -1,10 +1,15 @@
 package br.com.vibbra.notificationservice.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.vibbra.notificationservice.config.GlobalExceptionHandler;
 import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.JwtTokenStub;
-import br.com.vibbra.notificationservice.dto.User;
-import br.com.vibbra.notificationservice.dto.UserStub;
 import br.com.vibbra.notificationservice.exceptions.ValidationException;
 import br.com.vibbra.notificationservice.service.AuthService;
 import br.com.vibbra.notificationservice.utils.ResourceUtils;
@@ -17,13 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class LoginControllerTest {
@@ -41,7 +39,6 @@ class LoginControllerTest {
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
-
 
     @Test
     public void shouldCreateUser() throws Exception {
@@ -63,11 +60,10 @@ class LoginControllerTest {
                 .andExpect(jsonPath("$.issuedAt").isNotEmpty());
     }
 
-
     @Test
     public void shouldReturnErrorWhenInputIsNullCreateUser() throws Exception {
 
-        String input = ResourceUtils.loadResourceAsString("json/login/response_requerid_fields.json");
+        String response = ResourceUtils.loadResourceAsString("json/login/response_requerid_fields.json");
         ValidationException validationException = new ValidationException("");
         mockMvc.perform(post(BASE_URI)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -75,7 +71,6 @@ class LoginControllerTest {
                         .content("{}")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(validationException.getStatus().value()))
-                .andExpect(content().string(input));
+                .andExpect(content().json(response));
     }
-
 }

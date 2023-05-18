@@ -1,22 +1,20 @@
 package br.com.vibbra.notificationservice.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.User;
 import br.com.vibbra.notificationservice.dto.UserStub;
+import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
-
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class JwtServiceTest {
@@ -26,7 +24,8 @@ class JwtServiceTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(jwtService, "SECRET_KEY", "59703373367639792442264528482B4D6251655468576D5A7134743777217A25");
+        ReflectionTestUtils.setField(
+                jwtService, "SECRET_KEY", "59703373367639792442264528482B4D6251655468576D5A7134743777217A25");
     }
 
     @Test
@@ -38,8 +37,7 @@ class JwtServiceTest {
         assertAll(
                 () -> assertTrue(jwtToken.getIssuedAt().before(new Date())),
                 () -> assertTrue(jwtToken.getExpiration().after(new Date())),
-                () -> assertNotNull(jwtToken.getToken())
-        );
+                () -> assertNotNull(jwtToken.getToken()));
     }
 
     @Test
@@ -57,5 +55,4 @@ class JwtServiceTest {
                 () -> assertEquals(user.getEmail(), jwtToken.getUser().getEmail()),
                 () -> assertEquals(user.getId(), jwtToken.getUser().getId()));
     }
-
 }

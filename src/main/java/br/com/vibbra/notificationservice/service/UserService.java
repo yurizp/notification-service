@@ -21,6 +21,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
 
+    public User findUserById(final Long id) {
+        log.info("[Buscar usuario] Iniciando a busca de um usuario por ID {}", id);
+        UserEntity user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+        User userDto = objectMapper.convertValue(user, User.class);
+        log.info("[Buscar usuario] Finalizada a busca de usuario na base {}", userDto);
+        return userDto;
+    }
+
     public User createUser(CreateUserRequest createUserRequest) {
         log.info("[Criar usuario] Iniciando a etapa de criar usuario na base {}", createUserRequest);
         validateIfEmailAlreadyExistsInDatabase(createUserRequest.getEmail());

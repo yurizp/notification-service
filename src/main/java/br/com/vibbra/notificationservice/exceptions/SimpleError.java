@@ -1,6 +1,5 @@
 package br.com.vibbra.notificationservice.exceptions;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +16,5 @@ public class SimpleError {
 
     private String message;
     private String code;
-    private Object object;
-    private List<SimpleError> details;
+    private Object details;
 }

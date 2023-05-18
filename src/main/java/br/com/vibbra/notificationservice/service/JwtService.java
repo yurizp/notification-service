@@ -4,6 +4,7 @@ import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.User;
 import br.com.vibbra.notificationservice.mapper.ClaimsMapper;
 import br.com.vibbra.notificationservice.mapper.JwtTokenMapper;
+import com.mysql.cj.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,9 +41,10 @@ public class JwtService {
     }
 
     public JwtToken decodeToken(final String token) {
+        String bearer = token.replace("Bearer ", "");
         log.info("[Abrir toke] Inciando o fluxo de desempacotamento de token");
-        Claims claims = extractAllClaims(token);
-        JwtToken userToken = JwtTokenMapper.create(claims, token);
+        Claims claims = extractAllClaims(bearer);
+        JwtToken userToken = JwtTokenMapper.create(claims, bearer);
         log.info("[Abrir toke] Desempacotamento de token finalizado com sucesso user {}", userToken);
         return userToken;
     }

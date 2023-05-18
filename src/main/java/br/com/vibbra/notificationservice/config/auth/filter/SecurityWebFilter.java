@@ -65,9 +65,9 @@ public class SecurityWebFilter extends OncePerRequestFilter {
             if (StringUtils.isBlank(token) || !StringUtils.startsWithIgnoreCase(token, "Bearer")) {
                 throw new InvalidTokenException();
             }
-            token = StringUtils.substring(token, 7);
+            String tokenCuted = StringUtils.substring(token, 7);
 
-            JwtToken userToken = authService.decodeToken(token);
+            JwtToken userToken = authService.decodeToken(tokenCuted);
             servletContext.setAttribute("jwtToken", userToken);
 
             chain.doFilter(req, res);

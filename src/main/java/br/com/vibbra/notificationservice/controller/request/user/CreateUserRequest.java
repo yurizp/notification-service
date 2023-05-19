@@ -1,6 +1,7 @@
 package br.com.vibbra.notificationservice.controller.request.user;
 
 import br.com.vibbra.notificationservice.config.tostring.Objects;
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +25,7 @@ public class CreateUserRequest {
 
     @NotBlank
     @JsonProperty("password")
+    @ToStringIgnore
     private String password;
 
     @NotBlank

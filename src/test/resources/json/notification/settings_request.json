@@ -1,0 +1,21 @@
+{
+  "settings":{
+    "channel": "WEBPUSHES",
+    "site":{
+      "name":"name",
+      "address":"address",
+      "url_icon":"url_icon"
+    },
+    "allow_notification":{
+      "message_text":"message_text",
+      "allow_button_text":"allow_button_text",
+      "deny_button_text":"deny_button_text"
+    },
+    "welcome_notification":{
+      "message_title":"message_title",
+      "message_text":"message_text",
+      "enable_url_redirect": 100,
+      "url_redirect":"url_redirect"
+    }
+  }
+}

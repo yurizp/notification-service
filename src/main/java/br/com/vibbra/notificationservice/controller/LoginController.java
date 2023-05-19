@@ -25,8 +25,7 @@ public class LoginController {
     @PostMapping()
     @Operation(
             summary = "Api responsavel para gerar token JWT.",
-            description = "Para gerar o token voce deve ter um usario valido."
-    )
+            description = "Para gerar o token voce deve ter um usario valido.")
     public JwtToken login(@RequestBody @Validated AuthRequest userRequest) {
         log.info("[AuthController] Iniciado o processo de geração de token. Request:{}", userRequest);
         JwtToken token = authService.generateToken(userRequest);

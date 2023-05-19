@@ -1,0 +1,1 @@
+{"message":"Campo(s) com formato(s) invalido(s).","code":"NTS-004","details":[[],["settings.site: 'must not be null'","settings.allowNotification: 'must not be null'"]]}

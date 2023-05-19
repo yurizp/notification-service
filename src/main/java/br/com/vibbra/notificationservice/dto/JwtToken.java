@@ -1,7 +1,7 @@
 package br.com.vibbra.notificationservice.dto;
 
-import br.com.vibbra.notificationservice.config.tostring.Exclude;
 import br.com.vibbra.notificationservice.config.tostring.Objects;
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import java.util.Date;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtToken {
 
-    @Exclude
+    @ToStringIgnore
     private String token;
 
     private UserToken user;

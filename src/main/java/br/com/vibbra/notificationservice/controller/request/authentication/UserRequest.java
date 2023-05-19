@@ -1,5 +1,6 @@
 package br.com.vibbra.notificationservice.controller.request.authentication;
 
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,10 @@ public class UserRequest {
 
     private String id;
     private String username;
+
+    @ToStringIgnore
     private String password;
+
     private String email;
 
     @Override

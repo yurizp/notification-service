@@ -4,7 +4,6 @@ import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.User;
 import br.com.vibbra.notificationservice.mapper.ClaimsMapper;
 import br.com.vibbra.notificationservice.mapper.JwtTokenMapper;
-import com.mysql.cj.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,7 +23,7 @@ public class JwtService {
 
     public JwtToken generateToken(final User user) {
         log.info("[Gerar token] Gerando o token do usuario {}", user);
-        Date expiration = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
+        Date expiration = Date.from(Instant.now().plus(30, ChronoUnit.DAYS));
         Date issuedAt = new Date(System.currentTimeMillis());
 
         String token = Jwts.builder()

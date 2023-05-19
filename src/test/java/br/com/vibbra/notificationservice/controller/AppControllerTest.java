@@ -1,12 +1,18 @@
 package br.com.vibbra.notificationservice.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.vibbra.notificationservice.config.GlobalExceptionHandler;
 import br.com.vibbra.notificationservice.controller.response.app.AppResponse;
 import br.com.vibbra.notificationservice.controller.response.app.AppResponseStub;
 import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.JwtTokenStub;
-import br.com.vibbra.notificationservice.dto.User;
-import br.com.vibbra.notificationservice.dto.UserStub;
 import br.com.vibbra.notificationservice.service.AppService;
 import br.com.vibbra.notificationservice.service.AuthService;
 import br.com.vibbra.notificationservice.utils.ResourceUtils;
@@ -20,28 +26,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.io.IOException;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(MockitoExtension.class)
 class AppControllerTest {
 
     private static MockMvc mockMvc;
     private static final String TOKEN = "such a valid token, wow";
     private static final String BASE_URI = "/v1/apps";
+
     @Mock
     private AppService appService;
+
     @Mock
     private AuthService authService;
-
 
     @BeforeEach
     public void setUp() {
@@ -75,10 +71,8 @@ class AppControllerTest {
         JwtToken jwtToken = JwtTokenStub.create();
         AppResponse appResponse = AppResponseStub.create();
 
-        when(appService.findAppById(any(), any()))
-                .thenReturn(appResponse);
-        when(authService.decodeToken(eq(TOKEN)))
-                .thenReturn(jwtToken);
+        when(appService.findAppById(any(), any())).thenReturn(appResponse);
+        when(authService.decodeToken(eq(TOKEN))).thenReturn(jwtToken);
 
         mockMvc.perform(get(BASE_URI.concat("/123"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

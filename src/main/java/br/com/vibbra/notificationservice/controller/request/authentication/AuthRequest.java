@@ -1,7 +1,7 @@
 package br.com.vibbra.notificationservice.controller.request.authentication;
 
-import br.com.vibbra.notificationservice.config.tostring.Exclude;
 import br.com.vibbra.notificationservice.config.tostring.Objects;
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,8 +20,8 @@ public class AuthRequest {
     @NotBlank
     private String email;
 
-    @Exclude
     @NotBlank
+    @ToStringIgnore
     private String password;
 
     @Override

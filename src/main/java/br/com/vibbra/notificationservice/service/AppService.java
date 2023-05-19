@@ -6,7 +6,6 @@ import br.com.vibbra.notificationservice.db.AppRepository;
 import br.com.vibbra.notificationservice.db.UserRepository;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.UserEntity;
-import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.exceptions.AppNotFoundException;
 import br.com.vibbra.notificationservice.exceptions.UserNotFoundException;
 import br.com.vibbra.notificationservice.mapper.AppEntityMapper;
@@ -30,7 +29,8 @@ public class AppService {
     }
 
     public AppResponse findAppById(final Long appId, final Long userId) {
-        AppEntity appEntity = appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+        AppEntity appEntity =
+                appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
         return AppResponseMapper.create(appEntity);
     }
 }

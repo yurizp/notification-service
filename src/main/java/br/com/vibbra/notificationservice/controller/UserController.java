@@ -41,8 +41,7 @@ public class UserController {
     @GetMapping("{id}")
     @Operation(
             summary = "Api responsavel por buscar um usuario pelo seu id.",
-            description = "Para buscar o user voce deve ter um token valido."
-    )
+            description = "Para buscar o user voce deve ter um token valido.")
     public UserResponse findUserById(@RequestHeader String Authorization, @PathVariable Long id) {
         log.info("[FindUserById] Iniciando o buscar de usuario por ID {}", id);
         User user = userService.findUserById(id);

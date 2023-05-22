@@ -1,20 +1,19 @@
-package br.com.vibbra.notificationservice.controller.response.notification.webpush;
+package br.com.vibbra.notificationservice.db.entity.notification.webpush;
 
-import br.com.vibbra.notificationservice.enums.Channel;
+public class WebpushEntityStub {
 
-public class WebpushResponseStub {
-
-    public static WebpushResponse create() {
-        return WebpushResponse.builder()
-                .channel(Channel.WEBPUSHES)
+    public static WebpushEntity create() {
+        return WebpushEntity.builder()
+                .id(85L)
                 .site(siteCreate())
                 .allowNotification(allowsCreate())
                 .welcomeNotification(welcomeCreate())
                 .build();
     }
 
-    private static WelcomeNotification welcomeCreate() {
-        return WelcomeNotification.builder()
+    private static WelcomeNotificationEntity welcomeCreate() {
+        return WelcomeNotificationEntity.builder()
+                .id(93L)
                 .messageText("Seja bem vindo!")
                 .messageTitle("Vibbra")
                 .urlRedirect("https://vibbra.com.br")
@@ -22,16 +21,18 @@ public class WebpushResponseStub {
                 .build();
     }
 
-    private static AllowNotification allowsCreate() {
-        return AllowNotification.builder()
+    private static AllowNotificationEntity allowsCreate() {
+        return AllowNotificationEntity.builder()
+                .id(31L)
                 .messageText("Você deseja receber notificações?")
                 .allowButtonText("Permitir")
                 .denyButtonText("Negar")
                 .build();
     }
 
-    private static Site siteCreate() {
-        return Site.builder()
+    private static SiteEntity siteCreate() {
+        return SiteEntity.builder()
+                .id(44L)
                 .name("Vibbra")
                 .address("https://vibbra.com.br")
                 .urlIcon("https://vibbra.com.br/icon.png")

@@ -1,11 +1,11 @@
-package br.com.vibbra.notificationservice.controller.response.notification.webpush;
+package br.com.vibbra.notificationservice.controller.request.notification.webpush;
 
 import br.com.vibbra.notificationservice.enums.Channel;
 
-public class WebpushResponseStub {
+public class WebPushRequestStub {
 
-    public static WebpushResponse create() {
-        return WebpushResponse.builder()
+    public static WebPushRequest create() {
+        return WebPushRequest.builder()
                 .channel(Channel.WEBPUSHES)
                 .site(siteCreate())
                 .allowNotification(allowsCreate())

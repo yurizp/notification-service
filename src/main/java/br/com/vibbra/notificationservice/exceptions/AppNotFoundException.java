@@ -8,7 +8,7 @@ public class AppNotFoundException extends HttpException {
     private final SimpleError simpleError;
 
     public AppNotFoundException() {
-        super(ErrorMessage.EXPIRED_TOKEN.getMessage());
+        super(ErrorMessage.APP_NOT_FOUND.getMessage());
         simpleError = SimpleError.builder()
                 .message(ERROR.getMessage())
                 .code(ERROR.getCode())

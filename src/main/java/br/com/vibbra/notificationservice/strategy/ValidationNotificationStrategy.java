@@ -7,5 +7,5 @@ public interface ValidationNotificationStrategy {
 
     public Channel getChannel();
 
-    public void saveOrUpdateValidation(Long userId, Long appId, Channel channel, NotificationRequest notification);
+    public void validate(Long userId, Long appId, Channel channel, NotificationRequest notification);
 }

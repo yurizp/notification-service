@@ -30,13 +30,11 @@ public class WebpushesNotificationStrategy extends BaseNotificationStrategy impl
     public WebpushesNotificationStrategy(
             AppRepository appRepository,
             NotificationConfigRepository configRepository,
-            AppRepository appRepository1,
-            WebpushRepository webpushRepository,
-            NotificationConfigRepository configRepository1) {
+            WebpushRepository webpushRepository) {
         super(appRepository, configRepository);
-        this.appRepository = appRepository1;
+        this.appRepository = appRepository;
         this.webpushRepository = webpushRepository;
-        this.configRepository = configRepository1;
+        this.configRepository = configRepository;
     }
 
     @Override
@@ -96,11 +94,11 @@ public class WebpushesNotificationStrategy extends BaseNotificationStrategy impl
 
     private void validateIfUserHavePermissionToAppAndIfExistsApp(Long userId, Long appId) {
         if (!appRepository.existsByIdAndUserId(appId, userId)) {
-            new AppNotFoundException();
+            throw new AppNotFoundException();
         }
 
         if (!webpushRepository.existsByAppId(appId)) {
-            new SettingsNotFoundException();
+            throw new SettingsNotFoundException();
         }
     }
 

@@ -8,9 +8,7 @@ public class NotificationResponseStub {
         return build(WebpushResponseStub.create());
     }
 
-    private static NotificationResponse build(SettingsResponse settingsResponse){
-        return NotificationResponse.builder()
-                .settings(settingsResponse)
-                .build();
+    private static NotificationResponse build(SettingsResponse settingsResponse) {
+        return NotificationResponse.builder().settings(settingsResponse).build();
     }
 }

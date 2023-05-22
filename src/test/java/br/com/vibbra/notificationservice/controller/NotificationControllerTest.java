@@ -1,5 +1,13 @@
 package br.com.vibbra.notificationservice.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import br.com.vibbra.notificationservice.config.GlobalExceptionHandler;
 import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
 import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponseStub;
@@ -19,25 +27,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @ExtendWith(MockitoExtension.class)
 class NotificationControllerTest {
-
 
     private static MockMvc mockMvc;
     private static final String TOKEN = "such a valid token, wow";
     private static final String BASE_URI = "/v1/apps";
+
     @Mock
     public NotificationFacade facede;
+
     @Mock
     private AuthService authService;
+
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new NotificationController(facede, authService))
@@ -63,7 +65,8 @@ class NotificationControllerTest {
     @Test
     public void shouldReturnErrorWhenCreateSettingsBodyIsEmpty() throws Exception {
         String input = ResourceUtils.loadResourceAsString("json/notification/settings_request_with_all_empty.json");
-        String response = ResourceUtils.loadResourceAsString("json/notification/settings_response_error_with_all_empty.json");
+        String response =
+                ResourceUtils.loadResourceAsString("json/notification/settings_response_error_with_all_empty.json");
 
         mockMvc.perform(post(BASE_URI.concat("/123/WEBPUSHES/settings"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,13 +79,17 @@ class NotificationControllerTest {
 
     @Test
     public void shouldReturnSuccessfullyEnableOrDisable() throws Exception {
-        NotificationConfigResponse notificationConfigResponse = NotificationConfigResponse.builder().previousStatus(true).currentStatus(false).build();
+        NotificationConfigResponse notificationConfigResponse = NotificationConfigResponse.builder()
+                .previousStatus(true)
+                .currentStatus(false)
+                .build();
         JwtToken jwtToken = JwtTokenStub.create();
 
         when(authService.decodeToken(any())).thenReturn(jwtToken);
         when(facede.enableOrDisableNotification(any(), any(), any())).thenReturn(notificationConfigResponse);
 
-        String response = ResourceUtils.loadResourceAsString("json/notification/enable_or_disable_notification_response.json");
+        String response =
+                ResourceUtils.loadResourceAsString("json/notification/enable_or_disable_notification_response.json");
 
         mockMvc.perform(put(BASE_URI.concat("/123/WEBPUSHES/settings"))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -109,6 +116,4 @@ class NotificationControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(content().json(response));
     }
-
-
 }

@@ -14,6 +14,28 @@ import java.util.Objects;
 
 public class WebpushesNotificationMapper {
 
+    public static WebpushEntity update(WebpushEntity pushEntity, NotificationRequest notification) {
+        WebPushRequest request = (WebPushRequest) notification.getSettings();
+
+        Long allowNotificationId = Objects.isNull(pushEntity.getAllowNotification())
+                ? null
+                : pushEntity.getAllowNotification().getId();
+        Long welcomeNotificationId = Objects.isNull(pushEntity.getWelcomeNotification())
+                ? null
+                : pushEntity.getWelcomeNotification().getId();
+        Long siteId = Objects.isNull(pushEntity.getSite())
+                ? null
+                : pushEntity.getSite().getId();
+
+        return WebpushEntity.builder()
+                .id(pushEntity.getId())
+                .app(pushEntity.getApp())
+                .allowNotification(allowNotificationCreate(allowNotificationId, request.getAllowNotification()))
+                .welcomeNotification(welcomeNotificationCreate(welcomeNotificationId, request.getWelcomeNotification()))
+                .site(siteCreate(siteId, request.getSite()))
+                .build();
+    }
+
     public static WebpushEntity create(NotificationRequest notification, AppEntity app) {
         WebPushRequest request = (WebPushRequest) notification.getSettings();
         return WebpushEntity.builder()
@@ -50,28 +72,6 @@ public class WebpushesNotificationMapper {
                 .allowButtonText(allowNotification.getAllowButtonText())
                 .messageText(allowNotification.getMessageText())
                 .denyButtonText(allowNotification.getDenyButtonText())
-                .build();
-    }
-
-    public static WebpushEntity update(WebpushEntity pushEntity, NotificationRequest notification) {
-        WebPushRequest request = (WebPushRequest) notification.getSettings();
-
-        Long allowNotificationId = Objects.isNull(pushEntity.getAllowNotification())
-                ? null
-                : pushEntity.getAllowNotification().getId();
-        Long welcomeNotificationId = Objects.isNull(pushEntity.getWelcomeNotification())
-                ? null
-                : pushEntity.getWelcomeNotification().getId();
-        Long siteId = Objects.isNull(pushEntity.getSite())
-                ? null
-                : pushEntity.getSite().getId();
-
-        return WebpushEntity.builder()
-                .id(pushEntity.getId())
-                .app(pushEntity.getApp())
-                .allowNotification(allowNotificationCreate(allowNotificationId, request.getAllowNotification()))
-                .welcomeNotification(welcomeNotificationCreate(welcomeNotificationId, request.getWelcomeNotification()))
-                .site(siteCreate(siteId, request.getSite()))
                 .build();
     }
 }

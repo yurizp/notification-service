@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(error.getStatus()).body(error.getError());
     }
 
-
     @ExceptionHandler
     @ResponseBody
     public ResponseEntity notExpectedError(HttpMessageNotReadableException e) {

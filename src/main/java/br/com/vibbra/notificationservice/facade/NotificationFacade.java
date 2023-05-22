@@ -27,7 +27,7 @@ public class NotificationFacade {
 
         if (!validations.isEmpty()) {
             log.info("[Validacao] Encontrada estrategia de validação {}", notification.getSettings());
-            validationService.get().saveOrUpdateValidation(userId, appId, channel, notification);
+            validationService.get().validate(userId, appId, channel, notification);
             log.info("[Validacao] Valido para seguir no fluxo. {}", notification.getSettings());
         }
 

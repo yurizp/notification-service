@@ -31,9 +31,7 @@ public class AppController {
 
     @Secured
     @PostMapping
-    @Operation(
-            summary = "Api responsavel por criar um App vinculado ao usuario.",
-            description = "Para gerar o App voce deve ter um token valido.")
+    @Operation(summary = "Api responsavel por criar um App vinculado ao usuario dono do Token.")
     public AppResponse createApp(
             @RequestHeader String authorization, @RequestBody @Validated CreateAppRequest createApp) {
         log.info("[CreateApp] Iniciando o processo de criação de aplicativo {}", createApp);
@@ -46,9 +44,7 @@ public class AppController {
 
     @Secured
     @GetMapping("/{id}")
-    @Operation(
-            summary = "Api responsavel por buscar um App por id.",
-            description = "Para gerar o App voce deve ter um token valido.")
+    @Operation(summary = "Api responsavel por buscar um App por id do usuario dono do Token.")
     public AppResponse findById(@RequestHeader String authorization, @PathVariable Long id) {
         log.info("[CreateApp] Iniciando a busca de um aplicativo {}", id);
         JwtToken jwtToken = authService.decodeToken(authorization);

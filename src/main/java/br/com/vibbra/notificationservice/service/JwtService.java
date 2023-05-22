@@ -23,7 +23,7 @@ public class JwtService {
 
     public JwtToken generateToken(final User user) {
         log.info("[Gerar token] Gerando o token do usuario {}", user);
-        Date expiration = Date.from(Instant.now().plus(30, ChronoUnit.DAYS));
+        Date expiration = Date.from(Instant.now().plus(30, ChronoUnit.MINUTES));
         Date issuedAt = new Date(System.currentTimeMillis());
 
         String token = Jwts.builder()

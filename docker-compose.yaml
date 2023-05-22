@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mysql-server:
+    image: mysql:8.0.33
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "notification"
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    networks:
+      - notification-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    expose:
+      - 8080
+    environment:
+      - DB_NAME=jdbc:mysql://mysql-server:3306/notification
+      - DB_PASS=password
+      - DB_USER=root
+    links:
+      - mysql-server
+    depends_on:
+      - mysql-server
+    networks:
+      - notification-network
+
+networks:
+  notification-network:
+    driver: bridge

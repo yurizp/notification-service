@@ -34,41 +34,52 @@ public class NotificationController {
 
     @Secured
     @PostMapping("/{appId}/{channel}/settings")
-    @Operation(
-            summary = "Api responsavel por configurar um WebPush vinculado ao usuario.",
-            description = "Para gerar o App voce deve ter um token valido.")
+    @Operation(summary = "Api responsavel por configurar um canal de notificação.")
     public void settings(
             @RequestHeader String authorization,
             @RequestBody @Validated NotificationRequest notification,
             @PathVariable Long appId,
             @PathVariable Channel channel) {
+        log.info("[NotificationController] Iniciada a configuração de notificação. Request:{}", notification);
         JwtToken jwtToken = authService.decodeToken(authorization);
         facede.saveOrUpdateSettings(jwtToken.getUser().getId(), appId, channel, notification);
+        log.info("[NotificationController] Finalizada a configuração de notificação. Request:{}", notification);
     }
 
     @Secured
     @PutMapping("/{appId}/{channel}/settings")
-    @Operation(
-            summary = "Api responsavel por configurar um WebPush vinculado ao usuario.",
-            description = "Para gerar o App voce deve ter um token valido.")
+    @Operation(summary = "Api responsavel por habilitar ou desabilitar notificação.")
     public NotificationConfigResponse enableOrDisable(
             @RequestHeader String authorization, @PathVariable Long appId, @PathVariable Channel channel) {
+        log.info(
+                "[NotificationController] Iniciada a configuração de notificação. AppId:{} Channel: {}",
+                appId,
+                channel);
         JwtToken jwtToken = authService.decodeToken(authorization);
         NotificationConfigResponse notificationConfigResponse =
                 facede.enableOrDisableNotification(jwtToken.getUser().getId(), appId, channel);
+        log.info(
+                "[NotificationController] Finalizada a configuração de notificação. AppId:{} Channel: {} Response:{}",
+                appId,
+                channel,
+                notificationConfigResponse);
         return notificationConfigResponse;
     }
 
     @Secured
     @GetMapping("/{appId}/{channel}/settings")
-    @Operation(
-            summary = "Api responsavel por configurar um WebPush vinculado ao usuario.",
-            description = "Para gerar o App voce deve ter um token valido.")
+    @Operation(summary = "Api responsavel por buscar as configs por AppId.")
     public NotificationResponse findConfig(
             @RequestHeader String authorization, @PathVariable Long appId, @PathVariable Channel channel) {
+        log.info("[NotificationController] Iniciada a busca das configs por AppId:{} Channel: {}", appId, channel);
         JwtToken jwtToken = authService.decodeToken(authorization);
         NotificationResponse notificationResponse =
                 facede.findConfig(jwtToken.getUser().getId(), appId, channel);
+        log.info(
+                "[NotificationController] Finalizada a busca das configs por AppId:{} Channel: {} Response:{}",
+                appId,
+                channel,
+                notificationResponse);
         return notificationResponse;
     }
 }

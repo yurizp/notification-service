@@ -40,18 +40,32 @@ public class WebpushesNotificationStrategy extends BaseNotificationStrategy impl
     @Override
     public void saveOrUpdateSettings(Long userId, Long appId, Channel channel, NotificationRequest notification) {
         try {
+            log.info(
+                    "[Webpush Add/Updade Configuração] Iniciando a configuração do usariaId {} appId {} e Canal {}",
+                    userId,
+                    appId,
+                    channel);
             AppEntity appEntity =
                     appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+            log.info("[Webpush Add/Updade Configuração] App encontrado {}", appEntity);
             Optional<WebpushEntity> webpushEntity = webpushRepository.findByAppId(appId);
+
             if (webpushEntity.isPresent()) {
-                WebpushEntity entity = webpushEntity.get();
+                WebpushEntity webpush = webpushEntity.get();
+                log.info("[Webpush Configuração] Configuração encontrada {}", webpush);
+                WebpushEntity entity = webpush;
                 updateSettings(entity, notification);
             } else {
+                log.info(
+                        "[Webpush Configuração] Configuração não encontrada. usariaId {} appId {} e Canal {}",
+                        userId,
+                        appId,
+                        channel);
                 createSettings(appEntity, notification);
             }
         } catch (Exception e) {
             log.error(
-                    "[Webpush Configuração] Não foi ajustar as configuracoes para o app {} e userId {} error {}",
+                    "[Webpush Add/Updade Configuração] Não foi ajustar as configuracoes para o app {} e userId {} error {}",
                     appId,
                     userId,
                     e);
@@ -79,8 +93,9 @@ public class WebpushesNotificationStrategy extends BaseNotificationStrategy impl
                     channel);
             validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
             WebpushEntity webpushEntity = webpushRepository.findByAppId(appId).get();
-            log.info("[Webpush Busca Config] Retornado com sucesso a config {}", webpushEntity);
-            return NotificationResponseMapper.create(webpushEntity);
+            NotificationResponse notificationResponse = NotificationResponseMapper.create(webpushEntity);
+            log.info("[Webpush Busca Config] Retornado com sucesso a config {}", notificationResponse);
+            return notificationResponse;
         } catch (Exception e) {
             log.error(
                     "[Webpush Busca Config] Ocorreu um erro ao buscar a config usariaId {} appId {} e Canal {} error:{}",
@@ -93,25 +108,39 @@ public class WebpushesNotificationStrategy extends BaseNotificationStrategy impl
     }
 
     private void validateIfUserHavePermissionToAppAndIfExistsApp(Long userId, Long appId) {
+        log.info("[Webpush Validacao] Validando se o usariaId {} tem permissão para o appId {}", userId, appId);
         if (!appRepository.existsByIdAndUserId(appId, userId)) {
+            log.error("[Webpush Validacao] App não encontrado para o usariaId {} appId {}", userId, appId);
             throw new AppNotFoundException();
         }
 
         if (!webpushRepository.existsByAppId(appId)) {
+            log.error("[Webpush Validacao] Configuração não encontrada para o appId {}", appId);
             throw new SettingsNotFoundException();
         }
+        log.info("[Webpush Validacao] UsariaId {} tem permissão para o appId {}", userId, appId);
     }
 
     private void createSettings(AppEntity app, NotificationRequest notification) {
+        log.info(
+                "[Webpush Add Configuração] Iniciando o processo de criacção de configuração. Webpush:{} Notification:{}",
+                app,
+                notification);
         WebpushEntity webPushEntity = WebpushesNotificationMapper.create(notification, app);
         WebpushEntity save = webpushRepository.save(webPushEntity);
-        log.info("[Webpush Configuração] Finalizado com sucesso o processo de configuração do Webpush {}", save);
+        log.info("[Webpush Add Configuração] Finalizado com sucesso o processo de configuração do Webpush {}", save);
     }
 
     private void updateSettings(WebpushEntity webpush, NotificationRequest notification) {
+        log.info(
+                "[Webpush Update Configuracao] Iniciando o processo de atualização de configuração. Webpush:{} Notification:{}",
+                webpush,
+                notification);
         WebpushEntity webPushEntity = WebpushesNotificationMapper.update(webpush, notification);
         WebpushEntity save = webpushRepository.save(webPushEntity);
-        log.info("[Webpush Update] Finalizado o processo de atualização de configuração do Webpush {}", save);
+        log.info(
+                "[Webpush Update Configuracao] Finalizado o processo de atualização de configuração do Webpush {}",
+                save);
     }
 
     @Override

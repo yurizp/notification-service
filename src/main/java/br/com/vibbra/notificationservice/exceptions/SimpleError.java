@@ -1,5 +1,6 @@
 package br.com.vibbra.notificationservice.exceptions;
 
+import br.com.vibbra.notificationservice.config.tostring.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,4 +18,9 @@ public class SimpleError {
     private String message;
     private String code;
     private Object details;
+
+    @Override
+    public String toString() {
+        return Objects.toString(this);
+    }
 }

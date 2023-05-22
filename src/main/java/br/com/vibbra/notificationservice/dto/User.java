@@ -1,7 +1,7 @@
 package br.com.vibbra.notificationservice.dto;
 
-import br.com.vibbra.notificationservice.config.tostring.Exclude;
 import br.com.vibbra.notificationservice.config.tostring.Objects;
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +19,7 @@ public class User {
     private Long id;
     private String email;
 
-    @Exclude
+    @ToStringIgnore
     private String password;
 
     private String name;

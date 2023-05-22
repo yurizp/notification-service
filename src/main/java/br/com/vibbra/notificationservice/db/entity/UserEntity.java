@@ -1,6 +1,7 @@
 package br.com.vibbra.notificationservice.db.entity;
 
 import br.com.vibbra.notificationservice.config.tostring.Objects;
+import br.com.vibbra.notificationservice.config.tostring.ToStringIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +23,10 @@ public class UserEntity {
     private Long id;
 
     private String email;
+
+    @ToStringIgnore
     private String password;
+
     private String name;
     private String phoneNumber;
     private String companyName;

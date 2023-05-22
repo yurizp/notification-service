@@ -3,8 +3,6 @@ package br.com.vibbra.notificationservice.mapper;
 import br.com.vibbra.notificationservice.controller.request.app.CreateAppRequest;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.UserEntity;
-import br.com.vibbra.notificationservice.dto.JwtToken;
-
 import java.util.UUID;
 
 public class AppEntityMapper {

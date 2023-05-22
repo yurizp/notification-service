@@ -84,7 +84,7 @@ public class SecurityWebFilter extends OncePerRequestFilter {
             res.setStatus(e.getStatus().value());
         } catch (Exception e) {
             logger.error("Erro ao validar o token", e);
-            InternalServerErrorException error = new InternalServerErrorException(e, e.getMessage());
+            InternalServerErrorException error = new InternalServerErrorException();
             res.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             res.getWriter().append(objectMapper.writeValueAsString(error.getError()));
             res.setStatus(error.getStatus().value());

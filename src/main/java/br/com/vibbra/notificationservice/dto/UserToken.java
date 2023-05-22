@@ -1,12 +1,12 @@
 package br.com.vibbra.notificationservice.dto;
 
+import br.com.vibbra.notificationservice.config.tostring.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @Builder
 @Getter
@@ -20,6 +20,6 @@ public class UserToken {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return Objects.toString(this);
     }
 }

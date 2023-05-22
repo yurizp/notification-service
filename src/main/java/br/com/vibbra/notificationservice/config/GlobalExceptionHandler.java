@@ -6,6 +6,7 @@ import br.com.vibbra.notificationservice.exceptions.InternalServerErrorException
 import br.com.vibbra.notificationservice.exceptions.ValidationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     @ResponseBody
     public ResponseEntity notExpectedError(Exception e) {
+        InternalServerErrorException error = new InternalServerErrorException();
+        return ResponseEntity.status(error.getStatus()).body(error.getError());
+    }
+
+
+    @ExceptionHandler
+    @ResponseBody
+    public ResponseEntity notExpectedError(HttpMessageNotReadableException e) {
         InternalServerErrorException error = new InternalServerErrorException(e, e.getMessage());
         return ResponseEntity.status(error.getStatus()).body(error.getError());
     }

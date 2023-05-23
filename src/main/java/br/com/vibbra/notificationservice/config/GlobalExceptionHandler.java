@@ -5,47 +5,45 @@ import br.com.vibbra.notificationservice.exceptions.HttpException;
 import br.com.vibbra.notificationservice.exceptions.InternalServerErrorException;
 import br.com.vibbra.notificationservice.exceptions.ValidationException;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
-    public ResponseEntity notExpectedError(Exception e) {
-        InternalServerErrorException error = new InternalServerErrorException();
-        return ResponseEntity.status(error.getStatus()).body(error.getError());
-    }
-
-    @ExceptionHandler
-    @ResponseBody
-    public ResponseEntity notExpectedError(HttpMessageNotReadableException e) {
-        InternalServerErrorException error = new InternalServerErrorException(e, e.getMessage());
-        return ResponseEntity.status(error.getStatus()).body(error.getError());
+    public ResponseEntity internalServerError(Exception e) {
+        InternalServerErrorException exception = new InternalServerErrorException();
+        log.error("Ocorreu um erro não esperado. Erro de saida:  {} Exception: {}", exception, e);
+        return ResponseEntity.status(exception.getStatus()).body(exception.getError());
     }
 
     @ExceptionHandler
     @ResponseBody
     public ResponseEntity validationError(MethodArgumentNotValidException e) {
         ValidationException exception = new ValidationException(e.getDetailMessageArguments());
+        log.error("Ocorreu um erro de validação. Erro de saida:  {} Exception: {}", exception, e);
         return ResponseEntity.status(exception.getStatus()).body(exception.getError());
     }
 
     @ExceptionHandler
     @ResponseBody
     public ResponseEntity validationError(ExpiredJwtException e) {
-        ExpiredTokenException expiredTokenException = new ExpiredTokenException();
-        return ResponseEntity.status(expiredTokenException.getStatus()).body(expiredTokenException.getError());
+        ExpiredTokenException exception = new ExpiredTokenException();
+        log.error("Token informado é invalido. Erro de saida:  {} Exception: {}", exception, e);
+        return ResponseEntity.status(exception.getStatus()).body(exception.getError());
     }
 
     @ExceptionHandler
     @ResponseBody
-    public ResponseEntity handleMethodArgumentNotValidException(HttpException e) {
+    public ResponseEntity httpExceptionHandler(HttpException e) {
+        log.error("O fluxo retornou um erro {} ErroCompleto:{}", e.getError(), e.toString());
         return ResponseEntity.status(e.getStatus()).body(e.getError());
     }
 }

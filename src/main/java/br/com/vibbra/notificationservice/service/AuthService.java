@@ -16,8 +16,11 @@ public class AuthService {
     private final UserService userService;
 
     public JwtToken generateToken(AuthRequest authRequest) {
+        log.info("[Criar Token] Gerando token para o user: {}", authRequest);
         User user = userService.findByEmailAndPassword(authRequest.getEmail(), authRequest.getPassword());
-        return jwtService.generateToken(user);
+        JwtToken jwtToken = jwtService.generateToken(user);
+        log.info("[Criar Token] Token gerado com sucesso: {}", jwtToken);
+        return jwtToken;
     }
 
     public JwtToken decodeToken(final String token) {

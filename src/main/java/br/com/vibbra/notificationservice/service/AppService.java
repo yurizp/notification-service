@@ -31,6 +31,7 @@ public class AppService {
     public AppResponse findAppById(final Long appId, final Long userId) {
         AppEntity appEntity =
                 appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+
         return AppResponseMapper.create(appEntity);
     }
 }

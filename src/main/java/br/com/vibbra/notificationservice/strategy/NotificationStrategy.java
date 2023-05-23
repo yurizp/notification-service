@@ -7,7 +7,7 @@ import br.com.vibbra.notificationservice.enums.Channel;
 
 public interface NotificationStrategy {
 
-    public Channel getChannel();
+    Channel getChannel();
 
     void saveOrUpdateSettings(Long userId, Long appId, Channel channel, NotificationRequest notification);
 

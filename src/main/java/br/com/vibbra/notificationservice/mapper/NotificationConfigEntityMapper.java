@@ -10,7 +10,7 @@ public class NotificationConfigEntityMapper {
         return NotificationConfigEntity.builder()
                 .app(app)
                 .channel(channel)
-                .enabled(false)
+                .enabled(true)
                 .build();
     }
 }

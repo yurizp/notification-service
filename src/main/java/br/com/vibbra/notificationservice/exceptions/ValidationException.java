@@ -1,5 +1,6 @@
 package br.com.vibbra.notificationservice.exceptions;
 
+import br.com.vibbra.notificationservice.config.tostring.Objects;
 import org.springframework.http.HttpStatus;
 
 public class ValidationException extends HttpException {
@@ -14,6 +15,11 @@ public class ValidationException extends HttpException {
                 .code(ERROR.getCode())
                 .details(details)
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toString(this);
     }
 
     @Override

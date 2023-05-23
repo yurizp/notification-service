@@ -3,18 +3,17 @@ package br.com.vibbra.notificationservice.strategy.notification;
 import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
 import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
 import br.com.vibbra.notificationservice.db.AppRepository;
-import br.com.vibbra.notificationservice.db.EmailRepository;
-import br.com.vibbra.notificationservice.db.EmailTemplateRepository;
 import br.com.vibbra.notificationservice.db.NotificationConfigRepository;
+import br.com.vibbra.notificationservice.db.SmsRepository;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.NotificationConfigEntity;
-import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
+import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntity;
 import br.com.vibbra.notificationservice.dto.NotificationConfigResponse;
 import br.com.vibbra.notificationservice.enums.Channel;
 import br.com.vibbra.notificationservice.exceptions.AppNotFoundException;
 import br.com.vibbra.notificationservice.exceptions.SettingsNotFoundException;
-import br.com.vibbra.notificationservice.mapper.EmailEntityMapper;
 import br.com.vibbra.notificationservice.mapper.NotificationResponseMapper;
+import br.com.vibbra.notificationservice.mapper.SmsEntityMapper;
 import br.com.vibbra.notificationservice.strategy.NotificationStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,19 +22,19 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class EmailNotificationStrategy extends BaseNotificationStrategy implements NotificationStrategy {
+public class SmsNotificationStrategy extends BaseNotificationStrategy implements NotificationStrategy {
 
     private final AppRepository appRepository;
-    private final EmailRepository emailRepository;
+    private final SmsRepository smsRepository;
     private final NotificationConfigRepository configRepository;
 
-    public EmailNotificationStrategy(
+    public SmsNotificationStrategy(
             AppRepository appRepository,
             NotificationConfigRepository configRepository,
-            EmailRepository emailRepository) {
+            SmsRepository smsRepository) {
         super(appRepository, configRepository);
         this.appRepository = appRepository;
-        this.emailRepository = emailRepository;
+        this.smsRepository = smsRepository;
         this.configRepository = configRepository;
     }
 
@@ -43,22 +42,22 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
     public void saveOrUpdateSettings(Long userId, Long appId, Channel channel, NotificationRequest notification) {
         try {
             log.info(
-                    "[Email Add/Updade Configuração] Iniciando a configuração do usariaId {} appId {} e Canal {}",
+                    "[Sms Add/Updade Configuração] Iniciando a configuração do usariaId {} appId {} e Canal {}",
                     userId,
                     appId,
                     channel);
             AppEntity appEntity = appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
-            log.info("[Email Add/Updade Configuração] App encontrado {}", appEntity);
-            Optional<EmailEntity> entityPresent = emailRepository.findByAppId(appId);
+            log.info("[Sms Add/Updade Configuração] App encontrado {}", appEntity);
+            Optional<SmsEntity> entityPresent = smsRepository.findByAppId(appId);
 
             if (entityPresent.isPresent()) {
-                EmailEntity emailEntity = entityPresent.get();
-                log.info("[Email Configuração] Configuração encontrada {}", emailEntity);
-                EmailEntity entity = emailEntity;
+                SmsEntity smsEntity = entityPresent.get();
+                log.info("[Sms Configuração] Configuração encontrada {}", smsEntity);
+                SmsEntity entity = smsEntity;
                 updateSettings(entity, notification);
             } else {
                 log.info(
-                        "[Email Configuração] Configuração não encontrada. usariaId {} appId {} e Canal {}",
+                        "[Sms Configuração] Configuração não encontrada. usariaId {} appId {} e Canal {}",
                         userId,
                         appId,
                         channel);
@@ -66,7 +65,7 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
             }
         } catch (Exception e) {
             log.error(
-                    "[Email Add/Updade Configuração] Não foi ajustar as configuracoes para o app {} e userId {} error {}",
+                    "[Sms Add/Updade Configuração] Não foi ajustar as configuracoes para o app {} e userId {} error {}",
                     appId,
                     userId,
                     e.getMessage());
@@ -88,18 +87,18 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
     public NotificationResponse findConfig(Long userId, Long appId, Channel channel) {
         try {
             log.info(
-                    "[Email Busca Config] Iniciando a busca da config do usariaId {} appId {} e Canal {}",
+                    "[Sms Busca Config] Iniciando a busca da config do usariaId {} appId {} e Canal {}",
                     userId,
                     appId,
                     channel);
             validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
-            EmailEntity email = emailRepository.findByAppId(appId).get();
-            NotificationResponse notificationResponse = NotificationResponseMapper.create(email);
-            log.info("[Email Busca Config] Retornado com sucesso a config {}", notificationResponse);
+            SmsEntity smsEntity = smsRepository.findByAppId(appId).get();
+            NotificationResponse notificationResponse = NotificationResponseMapper.create(smsEntity);
+            log.info("[Sms Busca Config] Retornado com sucesso a config {}", notificationResponse);
             return notificationResponse;
         } catch (Exception e) {
             log.error(
-                    "[Email Busca Config] Ocorreu um erro ao buscar a config usariaId {} appId {} e Canal {} error:{}",
+                    "[Sms Busca Config] Ocorreu um erro ao buscar a config usariaId {} appId {} e Canal {} error:{}",
                     userId,
                     appId,
                     channel,
@@ -109,43 +108,41 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
     }
 
     private void validateIfUserHavePermissionToAppAndIfExistsApp(Long userId, Long appId) {
-        log.info("[Email Validacao] Validando se o usariaId {} tem permissão para o appId {}", userId, appId);
+        log.info("[Sms Validacao] Validando se o usariaId {} tem permissão para o appId {}", userId, appId);
         if (!appRepository.existsByIdAndUserId(appId, userId)) {
-            log.error("[Email Validacao] App não encontrado para o usariaId {} appId {}", userId, appId);
+            log.error("[Sms Validacao] App não encontrado para o usariaId {} appId {}", userId, appId);
             throw new AppNotFoundException();
         }
 
-        if (!emailRepository.existsByAppId(appId)) {
-            log.error("[Email Validacao] Configuração não encontrada para o appId {}", appId);
+        if (!smsRepository.existsByAppId(appId)) {
+            log.error("[Sms Validacao] Configuração não encontrada para o appId {}", appId);
             throw new SettingsNotFoundException();
         }
-        log.info("[Email Validacao] UsariaId {} tem permissão para o appId {}", userId, appId);
+        log.info("[Sms Validacao] UsariaId {} tem permissão para o appId {}", userId, appId);
     }
 
     private void createSettings(AppEntity app, NotificationRequest notification) {
         log.info(
-                "[Email Add Configuração] Iniciando o processo de criacção de configuração. Email:{} Notification:{}",
+                "[Sms Add Configuração] Iniciando o processo de criacção de configuração. App:{} Notification:{}",
                 app,
                 notification);
-        EmailEntity email = EmailEntityMapper.create(notification, app);
-        EmailEntity save = emailRepository.save(email);
-        log.info("[Email Add Configuração] Finalizado com sucesso o processo de configuração {}", save);
+        SmsEntity smsEntity = SmsEntityMapper.create(notification, app);
+        SmsEntity save = smsRepository.save(smsEntity);
+        log.info("[Sms Add Configuração] Finalizado com sucesso o processo de configuração. {}", save);
     }
 
-    private void updateSettings(EmailEntity entity, NotificationRequest notification) {
+    private void updateSettings(SmsEntity entity, NotificationRequest notification) {
         log.info(
-                "[Email Update Configuracao] Iniciando o processo de atualização de configuração. Email:{} Notification:{}",
+                "[Sms Update Configuracao] Iniciando o processo de atualização de configuração. Entity:{} Notification:{}",
                 entity,
                 notification);
-        EmailEntity emailEntity = EmailEntityMapper.update(entity, notification);
-        EmailEntity save = emailRepository.save(emailEntity);
-        log.info(
-                "[Email Update Configuracao] Finalizado o processo de atualização de configuração {}",
-                save);
+        SmsEntity SmsEntity = SmsEntityMapper.update(entity, notification);
+        SmsEntity save = smsRepository.save(SmsEntity);
+        log.info("[Sms Update Configuracao] Finalizado o processo de atualização de configuração. {}", save);
     }
 
     @Override
     public Channel getChannel() {
-        return Channel.EMAIL;
+        return Channel.SMS;
     }
 }

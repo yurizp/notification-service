@@ -14,6 +14,7 @@ public enum ErrorMessage {
     APP_NOT_FOUND("NTS-006", "Não foi possivel encontrar o app."),
     CHANNEL_NOT_IMPLEMENTED("NTS-007", "Não temos esse canal em funcionamento ainda."),
     SETTINGS_NOT_FOUND("NTS-008", "Não foram encontradas configurações para esse canal."),
+    INVALID_BODY("NTS-009", "O body enviado nao corresponde ao esperado."),
     INTERNAL_SERVER_ERROR("NTS-999", "Ocorreu um erro interno.");
 
     private String code;

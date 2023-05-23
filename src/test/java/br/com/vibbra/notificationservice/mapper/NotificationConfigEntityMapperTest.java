@@ -17,6 +17,6 @@ class NotificationConfigEntityMapperTest {
         assertAll(
                 () -> assertEquals(appEntity, notificationConfigEntity.getApp()),
                 () -> assertEquals(Channel.WEBPUSHES, notificationConfigEntity.getChannel()),
-                () -> assertFalse(notificationConfigEntity.isEnabled()));
+                () -> assertTrue(notificationConfigEntity.isEnabled()));
     }
 }

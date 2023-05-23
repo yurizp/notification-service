@@ -1,10 +1,15 @@
 package br.com.vibbra.notificationservice.controller.request.notification;
 
+import br.com.vibbra.notificationservice.controller.request.notification.email.EmailRequestStub;
 import br.com.vibbra.notificationservice.controller.request.notification.webpush.WebPushRequestStub;
 
 public class NotificationRequestStub {
     public static NotificationRequest createWebpushRequest() {
         return build(WebPushRequestStub.create());
+    }
+
+    public static NotificationRequest createEmailRequest() {
+        return build(EmailRequestStub.create());
     }
 
     private static NotificationRequest build(SettingsRequest settingsRequest) {

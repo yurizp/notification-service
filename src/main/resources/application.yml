@@ -6,11 +6,11 @@ spring:
       connection-test-query: SELECT 1
       initialization-fail-timeout: 10000
     driver-class-name: "com.mysql.cj.jdbc.Driver"
-    url: ${DB_NAME:jdbc:mysql://127.0.0.1:3306/notification?createDatabaseIfNotExist=true}
+    url: ${DB_NAME:jdbc:mysql://localhost:3306/notification?createDatabaseIfNotExist=true}
     username: ${DB_USER:root}
     password: ${DB_PASS:root}
   flyway:
     enabled: true
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update

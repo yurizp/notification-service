@@ -21,7 +21,7 @@ class WebpushesNotificationMapperTest {
         WebPushRequest settings = (WebPushRequest) notificationRequest.getSettings();
         AppEntity appEntity = AppEntityStub.create();
 
-        WebpushEntity entity = WebpushesNotificationMapper.create(notificationRequest, appEntity);
+        WebpushEntity entity = WebpushesEntityMapper.create(notificationRequest, appEntity);
 
         assertAll(
                 () -> assertEquals(
@@ -60,7 +60,7 @@ class WebpushesNotificationMapperTest {
         NotificationRequest notificationRequest = NotificationRequestStub.createWebpushRequest();
         WebpushEntity entityInput = WebpushEntityStub.create();
 
-        WebpushEntity webpushEntity = WebpushesNotificationMapper.update(entityInput, notificationRequest);
+        WebpushEntity webpushEntity = WebpushesEntityMapper.update(entityInput, notificationRequest);
 
         assertAll(
                 () -> assertEquals(
@@ -108,7 +108,7 @@ class WebpushesNotificationMapperTest {
         WebPushRequest settings = (WebPushRequest) notificationRequest.getSettings();
         WebpushEntity entityInput = WebpushEntityStub.create();
 
-        WebpushEntity webpushEntity = WebpushesNotificationMapper.update(entityInput, notificationRequest);
+        WebpushEntity webpushEntity = WebpushesEntityMapper.update(entityInput, notificationRequest);
 
         assertAll(
                 () -> assertEquals(
@@ -157,7 +157,7 @@ class WebpushesNotificationMapperTest {
         entityInput.setAllowNotification(null);
         entityInput.setWelcomeNotification(null);
 
-        WebpushEntity webpushEntity = WebpushesNotificationMapper.update(entityInput, notificationRequest);
+        WebpushEntity webpushEntity = WebpushesEntityMapper.update(entityInput, notificationRequest);
 
         assertAll(
                 () -> assertEquals(

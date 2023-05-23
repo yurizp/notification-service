@@ -1,6 +1,7 @@
 package br.com.vibbra.notificationservice.mapper;
 
 import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.notification.email.EmailRequest;
 import br.com.vibbra.notificationservice.controller.request.notification.webpush.AllowNotification;
 import br.com.vibbra.notificationservice.controller.request.notification.webpush.Site;
 import br.com.vibbra.notificationservice.controller.request.notification.webpush.WebPushRequest;
@@ -10,11 +11,16 @@ import br.com.vibbra.notificationservice.db.entity.notification.webpush.AllowNot
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.SiteEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WelcomeNotificationEntity;
+import br.com.vibbra.notificationservice.exceptions.InvalidBodyException;
+
 import java.util.Objects;
 
-public class WebpushesNotificationMapper {
+public class WebpushesEntityMapper {
 
     public static WebpushEntity update(WebpushEntity pushEntity, NotificationRequest notification) {
+        if(!(notification.getSettings() instanceof WebPushRequest)) {
+            throw new InvalidBodyException();
+        }
         WebPushRequest request = (WebPushRequest) notification.getSettings();
 
         Long allowNotificationId = Objects.isNull(pushEntity.getAllowNotification())
@@ -37,6 +43,9 @@ public class WebpushesNotificationMapper {
     }
 
     public static WebpushEntity create(NotificationRequest notification, AppEntity app) {
+        if(!(notification.getSettings() instanceof WebPushRequest)) {
+            throw new InvalidBodyException();
+        }
         WebPushRequest request = (WebPushRequest) notification.getSettings();
         return WebpushEntity.builder()
                 .app(app)

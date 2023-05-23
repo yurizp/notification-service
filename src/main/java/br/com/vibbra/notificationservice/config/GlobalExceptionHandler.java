@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity internalServerError(Exception e) {
         InternalServerErrorException exception = new InternalServerErrorException();
-        log.error("Ocorreu um erro não esperado. Erro de saida:  {} Exception: {}", exception, e);
+        log.error("Ocorreu um erro não esperado. Erro de saida:{} Exception:{}", exception.toString(), e.getCause());
         return ResponseEntity.status(exception.getStatus()).body(exception.getError());
     }
 

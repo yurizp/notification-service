@@ -1,15 +1,14 @@
-package br.com.vibbra.notificationservice.db.entity.notification.email;
+package br.com.vibbra.notificationservice.db.entity.notification.sms;
 
 import br.com.vibbra.notificationservice.config.tostring.Objects;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
+import br.com.vibbra.notificationservice.enums.Channel;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,28 +16,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
-@Entity(name = "email")
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailEntity {
+@Entity(name = "sms")
+public class SmsEntity {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private AppEntity app;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public ServerEntity server;
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public SenderEntity sender;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_id", referencedColumnName = "id")
-    public List<EmailTemplateEntity> emailTemplates;
+    public SmsProviderEntity site;
 
     @Override
     public String toString() {

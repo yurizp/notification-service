@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
 import br.com.vibbra.notificationservice.dto.NotificationConfigResponse;
 import br.com.vibbra.notificationservice.enums.Channel;
 import br.com.vibbra.notificationservice.exceptions.ChannelNotImplementedFoundException;

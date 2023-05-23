@@ -15,6 +15,7 @@ public enum ErrorMessage {
     CHANNEL_NOT_IMPLEMENTED("NTS-007", "Não temos esse canal em funcionamento ainda."),
     SETTINGS_NOT_FOUND("NTS-008", "Não foram encontradas configurações para esse canal."),
     INVALID_BODY("NTS-009", "O body enviado nao corresponde ao esperado."),
+    GAP_BETWEEN_DATES_TO_LONG("NTS-010", "O intervalo de datas não pode ser maior que 30 dias"),
     INTERNAL_SERVER_ERROR("NTS-999", "Ocorreu um erro interno.");
 
     private String code;

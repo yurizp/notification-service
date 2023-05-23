@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequestStub;
-import br.com.vibbra.notificationservice.controller.request.notification.webpush.WebPushRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequestStub;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.webpush.WebPushRequest;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.AppEntityStub;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntity;

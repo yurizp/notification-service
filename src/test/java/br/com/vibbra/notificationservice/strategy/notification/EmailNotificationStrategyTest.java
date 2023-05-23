@@ -1,33 +1,42 @@
 package br.com.vibbra.notificationservice.strategy.notification;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequestStub;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequestStub;
+import br.com.vibbra.notificationservice.controller.request.sendnotification.email.EmailRequest;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.sendnotification.HistoryNotification;
+import br.com.vibbra.notificationservice.controller.response.sendnotification.NotificationHistoryResponse;
 import br.com.vibbra.notificationservice.db.AppRepository;
 import br.com.vibbra.notificationservice.db.EmailRepository;
 import br.com.vibbra.notificationservice.db.NotificationConfigRepository;
+import br.com.vibbra.notificationservice.db.NotificationHistoryRepository;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.AppEntityStub;
 import br.com.vibbra.notificationservice.db.entity.NotificationConfigEntity;
+import br.com.vibbra.notificationservice.db.entity.NotificationHistoryEntity;
+import br.com.vibbra.notificationservice.db.entity.NotificationHistoryEntityStub;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntityStub;
 import br.com.vibbra.notificationservice.dto.NotificationConfigResponse;
 import br.com.vibbra.notificationservice.enums.Channel;
 import br.com.vibbra.notificationservice.exceptions.AppNotFoundException;
 import br.com.vibbra.notificationservice.exceptions.SettingsNotFoundException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmailNotificationStrategyTest {
@@ -40,6 +49,9 @@ class EmailNotificationStrategyTest {
 
     @Mock
     private NotificationConfigRepository configRepository;
+
+    @Mock
+    private NotificationHistoryRepository historyRepository;
 
     @InjectMocks
     private EmailNotificationStrategy emailNotificationStrategy;
@@ -80,8 +92,7 @@ class EmailNotificationStrategyTest {
 
         assertThrows(
                 AppNotFoundException.class,
-                () -> emailNotificationStrategy.saveOrUpdateSettings(
-                        1L, 1L, Channel.EMAIL, new NotificationRequest()));
+                () -> emailNotificationStrategy.saveOrUpdateSettings(1L, 1L, Channel.EMAIL, new NotificationRequest()));
 
         verify(appRepository).findByIdAndUserId(any(), any());
     }
@@ -161,16 +172,50 @@ class EmailNotificationStrategyTest {
 
     @Test
     public void shouldThrowErrorWhenNoExistsAppToUserInGetConfig() {
-        when(appRepository.existsByIdAndUserId(any(),any())).thenReturn(false);
+        when(appRepository.existsByIdAndUserId(any(), any())).thenReturn(false);
 
-        assertThrows(AppNotFoundException.class, ()-> emailNotificationStrategy.findConfig(1L, 2L, Channel.EMAIL));
+        assertThrows(AppNotFoundException.class, () -> emailNotificationStrategy.findConfig(1L, 2L, Channel.EMAIL));
     }
 
     @Test
     public void shouldThrowErrorWhenNoExistsSettingsInGetConfig() {
-        when(appRepository.existsByIdAndUserId(any(),any())).thenReturn(true);
+        when(appRepository.existsByIdAndUserId(any(), any())).thenReturn(true);
         when(emailRepository.existsByAppId(any())).thenReturn(false);
 
-        assertThrows(SettingsNotFoundException.class, ()-> emailNotificationStrategy.findConfig(1L, 2L, Channel.EMAIL));
+        assertThrows(
+                SettingsNotFoundException.class, () -> emailNotificationStrategy.findConfig(1L, 2L, Channel.EMAIL));
+    }
+
+    @Test
+    public void shouldSendNotification() {
+        when(appRepository.existsByIdAndUserId(any(), any())).thenReturn(true);
+        when(emailRepository.existsByAppId(any())).thenReturn(true);
+        when(appRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(AppEntityStub.create()));
+
+        emailNotificationStrategy.sendNotification(1L, 1L, Channel.EMAIL, new EmailRequest());
+
+        verify(historyRepository).save(any());
+    }
+
+    @Test
+    public void shouldReturnNotifications() {
+        List<NotificationHistoryEntity> historyEntities = NotificationHistoryEntityStub.createList();
+        when(appRepository.existsByIdAndUserId(any(), any())).thenReturn(true);
+        when(emailRepository.existsByAppId(any())).thenReturn(true);
+        when(historyRepository.findByCreatedAtGreaterThanEqualAndCreatedAtLessThanEqualAndAppIdAndChannel(
+                        any(), any(), any(), any()))
+                .thenReturn(historyEntities);
+
+        List<NotificationHistoryResponse> historyExpected = historyEntities.stream()
+                .map(n -> NotificationHistoryResponse.builder()
+                        .sendDate(n.getCreatedAt())
+                        .notificationId(n.getId())
+                        .build())
+                .collect(Collectors.toList());
+
+        HistoryNotification notifications = emailNotificationStrategy.getNotifications(
+                1L, 1L, Channel.EMAIL, LocalDate.now().minusDays(4), LocalDate.now());
+
+        assertThat(notifications.getHistory()).usingRecursiveComparison().isEqualTo(historyExpected);
     }
 }

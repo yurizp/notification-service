@@ -2,7 +2,6 @@ package br.com.vibbra.notificationservice.db.entity.notification.sms;
 
 import br.com.vibbra.notificationservice.config.tostring.Objects;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
-import br.com.vibbra.notificationservice.enums.Channel;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,12 +23,13 @@ import lombok.Setter;
 @Entity(name = "sms")
 public class SmsEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToOne(fetch = FetchType.LAZY)
     private AppEntity app;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public SmsProviderEntity site;
 

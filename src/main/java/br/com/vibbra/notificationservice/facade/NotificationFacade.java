@@ -1,12 +1,15 @@
 package br.com.vibbra.notificationservice.facade;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.sendnotification.SendNotificationRequest;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.sendnotification.HistoryNotification;
 import br.com.vibbra.notificationservice.dto.NotificationConfigResponse;
 import br.com.vibbra.notificationservice.enums.Channel;
 import br.com.vibbra.notificationservice.exceptions.ChannelNotImplementedFoundException;
 import br.com.vibbra.notificationservice.strategy.NotificationStrategy;
 import br.com.vibbra.notificationservice.strategy.ValidationNotificationStrategy;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +61,35 @@ public class NotificationFacade {
         NotificationResponse response = notificationService.findConfig(userId, appId, channel);
         log.info("[NotificationFacade] Configurações encontradas para o canal {} configurações:{}", channel, response);
         return response;
+    }
+
+    public void sendNotification(
+            Long userId, Long appId, Channel channel, SendNotificationRequest sendNotificationRequest) {
+        log.info(
+                "[NotificationFacade] Buscando configurações para o canal {} userId:{} appId:{}",
+                channel,
+                userId,
+                appId);
+        NotificationStrategy notificationService = getNotificationService(channel);
+        notificationService.sendNotification(userId, appId, channel, sendNotificationRequest);
+        log.info("[NotificationFacade] Configurações encontradas para o canal {} configurações:{}", channel);
+    }
+
+    public HistoryNotification getNotificationHistory(
+            Long userId, Long appId, Channel channel, LocalDate startDate, LocalDate endTade) {
+        log.info(
+                "[NotificationFacade] Buscando configurações para o canal {} userId:{} appId:{}",
+                channel,
+                userId,
+                appId);
+        NotificationStrategy notificationService = getNotificationService(channel);
+        HistoryNotification notifications =
+                notificationService.getNotifications(userId, appId, channel, startDate, endTade);
+        log.info(
+                "[NotificationFacade] Configurações encontradas para o canal {} configurações:{}",
+                channel,
+                notifications);
+        return notifications;
     }
 
     private NotificationStrategy getNotificationService(Channel channel) {

@@ -2,10 +2,10 @@ package br.com.vibbra.notificationservice.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.email.EmailResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.sms.SmsResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.WebpushResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.email.EmailResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.sms.SmsResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.WebpushResponse;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntityStub;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntity;
@@ -22,7 +22,6 @@ class NotificationResponseMapperTest {
         NotificationResponse result = NotificationResponseMapper.create(webpushEntity);
         assertNotNull(result.getSettings());
         assertTrue((result.getSettings() instanceof WebpushResponse));
-
     }
 
     @Test

@@ -1,9 +1,12 @@
 package br.com.vibbra.notificationservice.strategy.notification;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.sendnotification.SendNotificationRequest;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.sendnotification.HistoryNotification;
 import br.com.vibbra.notificationservice.db.AppRepository;
 import br.com.vibbra.notificationservice.db.NotificationConfigRepository;
+import br.com.vibbra.notificationservice.db.NotificationHistoryRepository;
 import br.com.vibbra.notificationservice.db.SmsRepository;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.NotificationConfigEntity;
@@ -15,10 +18,10 @@ import br.com.vibbra.notificationservice.exceptions.SettingsNotFoundException;
 import br.com.vibbra.notificationservice.mapper.NotificationResponseMapper;
 import br.com.vibbra.notificationservice.mapper.SmsEntityMapper;
 import br.com.vibbra.notificationservice.strategy.NotificationStrategy;
+import java.time.LocalDate;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -31,8 +34,9 @@ public class SmsNotificationStrategy extends BaseNotificationStrategy implements
     public SmsNotificationStrategy(
             AppRepository appRepository,
             NotificationConfigRepository configRepository,
-            SmsRepository smsRepository) {
-        super(appRepository, configRepository);
+            SmsRepository smsRepository,
+            NotificationHistoryRepository notificationHistoryRepository) {
+        super(appRepository, configRepository, notificationHistoryRepository);
         this.appRepository = appRepository;
         this.smsRepository = smsRepository;
         this.configRepository = configRepository;
@@ -46,7 +50,8 @@ public class SmsNotificationStrategy extends BaseNotificationStrategy implements
                     userId,
                     appId,
                     channel);
-            AppEntity appEntity = appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+            AppEntity appEntity =
+                    appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
             log.info("[Sms Add/Updade Configuração] App encontrado {}", appEntity);
             Optional<SmsEntity> entityPresent = smsRepository.findByAppId(appId);
 
@@ -105,6 +110,28 @@ public class SmsNotificationStrategy extends BaseNotificationStrategy implements
                     e.getMessage());
             throw e;
         }
+    }
+
+    @Override
+    public void sendNotification(
+            Long userId, Long appId, Channel channel, SendNotificationRequest sendNotificationRequest) {
+        validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
+        log.info(
+                "[SMS Send Notification] Iniciando o envio de notificação para o usariaId {} appId {} e Canal {}",
+                userId,
+                appId,
+                channel);
+
+        AppEntity appEntity =
+                appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+        super.saveHistory(appEntity, channel);
+    }
+
+    @Override
+    public HistoryNotification getNotifications(
+            Long userId, Long appId, Channel channel, LocalDate startDate, LocalDate endDate) {
+        validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
+        return super.getNotifications(userId, appId, channel, startDate, endDate);
     }
 
     private void validateIfUserHavePermissionToAppAndIfExistsApp(Long userId, Long appId) {

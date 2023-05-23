@@ -1,6 +1,6 @@
 package br.com.vibbra.notificationservice.mapper;
 
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntity;
@@ -18,6 +18,7 @@ public class NotificationResponseMapper {
                 .settings(EmailResponseMapper.create(webpushEntity))
                 .build();
     }
+
     public static NotificationResponse create(SmsEntity smsEntity) {
         return NotificationResponse.builder()
                 .settings(SmsResponseMapper.create(smsEntity))

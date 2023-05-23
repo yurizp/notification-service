@@ -1,17 +1,16 @@
 package br.com.vibbra.notificationservice.mapper;
 
-import br.com.vibbra.notificationservice.controller.response.notification.SettingsResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.email.EmailResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.email.EmailTemplate;
-import br.com.vibbra.notificationservice.controller.response.notification.email.Sender;
-import br.com.vibbra.notificationservice.controller.response.notification.email.Server;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.SettingsResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.email.EmailResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.email.EmailTemplate;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.email.Sender;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.email.Server;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailTemplateEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.SenderEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.ServerEntity;
 import br.com.vibbra.notificationservice.enums.Channel;
 import io.jsonwebtoken.lang.Collections;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +25,7 @@ public class EmailResponseMapper {
     }
 
     private static List<EmailTemplate> createEmailTemplates(List<EmailTemplateEntity> emailTemplates) {
-        if(Collections.isEmpty(emailTemplates)) {
+        if (Collections.isEmpty(emailTemplates)) {
             return null;
         }
         return emailTemplates.stream()
@@ -47,9 +46,6 @@ public class EmailResponseMapper {
     }
 
     private static Sender createSender(SenderEntity sender) {
-        return Sender.builder()
-                .email(sender.getEmail())
-                .name(sender.getName())
-                .build();
+        return Sender.builder().email(sender.getEmail()).name(sender.getName()).build();
     }
 }

@@ -1,13 +1,11 @@
 package br.com.vibbra.notificationservice.db.entity.notification.email;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import br.com.vibbra.notificationservice.db.entity.AppEntityStub;
+import java.util.List;
 import net.bytebuddy.utility.RandomString;
 import org.apache.commons.lang3.RandomUtils;
-
-import java.util.List;
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class EmailEntityStub {
 
@@ -32,8 +30,6 @@ public class EmailEntityStub {
                 .uri(new RandomString().nextString())
                 .build();
     }
-
-
 
     private static ServerEntity createServer() {
         return ServerEntity.builder()

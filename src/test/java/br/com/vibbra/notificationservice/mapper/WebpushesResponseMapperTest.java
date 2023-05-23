@@ -3,7 +3,7 @@ package br.com.vibbra.notificationservice.mapper;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.WebpushResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.WebpushResponse;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntityStub;
 import org.junit.jupiter.api.Test;

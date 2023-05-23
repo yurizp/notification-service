@@ -11,13 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -30,12 +29,16 @@ public class EmailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AppEntity app;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public ServerEntity server;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public SenderEntity sender;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "email_id", referencedColumnName = "id")
     public List<EmailTemplateEntity> emailTemplates;

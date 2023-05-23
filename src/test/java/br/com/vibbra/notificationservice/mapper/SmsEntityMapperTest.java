@@ -1,15 +1,15 @@
 package br.com.vibbra.notificationservice.mapper;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequestStub;
-import br.com.vibbra.notificationservice.controller.request.notification.sms.SmsRequest;
+import static org.junit.jupiter.api.Assertions.*;
+
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequestStub;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.sms.SmsRequest;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.AppEntityStub;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntityStub;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SmsEntityMapperTest {
 
@@ -24,10 +24,12 @@ class SmsEntityMapperTest {
 
         assertAll(
                 () -> assertEquals(app, smsEntity.getApp()),
-                () -> assertEquals(smsSettings.getSite().getName(), smsEntity.getSite().getName()),
-                () -> assertEquals(smsSettings.getSite().getLogin(), smsEntity.getSite().getLogin()),
-                () -> assertEquals(smsSettings.getSite().getPassword(), smsEntity.getSite().getPassword())
-        );
+                () -> assertEquals(
+                        smsSettings.getSite().getName(), smsEntity.getSite().getName()),
+                () -> assertEquals(
+                        smsSettings.getSite().getLogin(), smsEntity.getSite().getLogin()),
+                () -> assertEquals(
+                        smsSettings.getSite().getPassword(), smsEntity.getSite().getPassword()));
     }
 
     @Test
@@ -41,10 +43,13 @@ class SmsEntityMapperTest {
         assertAll(
                 () -> assertEquals(entity.getApp(), smsEntity.getApp()),
                 () -> assertEquals(entity.getId(), smsEntity.getId()),
-                () -> assertEquals(smsSettings.getSite().getName(), smsEntity.getSite().getName()),
-                () -> assertEquals(smsSettings.getSite().getName(), smsEntity.getSite().getName()),
-                () -> assertEquals(smsSettings.getSite().getLogin(), smsEntity.getSite().getLogin()),
-                () -> assertEquals(smsSettings.getSite().getPassword(), smsEntity.getSite().getPassword())
-        );
+                () -> assertEquals(
+                        smsSettings.getSite().getName(), smsEntity.getSite().getName()),
+                () -> assertEquals(
+                        smsSettings.getSite().getName(), smsEntity.getSite().getName()),
+                () -> assertEquals(
+                        smsSettings.getSite().getLogin(), smsEntity.getSite().getLogin()),
+                () -> assertEquals(
+                        smsSettings.getSite().getPassword(), smsEntity.getSite().getPassword()));
     }
 }

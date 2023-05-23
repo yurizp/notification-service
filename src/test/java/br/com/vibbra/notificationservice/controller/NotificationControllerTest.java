@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.com.vibbra.notificationservice.config.GlobalExceptionHandler;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponseStub;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponseStub;
 import br.com.vibbra.notificationservice.dto.JwtToken;
 import br.com.vibbra.notificationservice.dto.JwtTokenStub;
 import br.com.vibbra.notificationservice.dto.NotificationConfigResponse;

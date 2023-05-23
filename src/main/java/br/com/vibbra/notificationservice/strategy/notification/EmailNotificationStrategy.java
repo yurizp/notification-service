@@ -1,11 +1,13 @@
 package br.com.vibbra.notificationservice.strategy.notification;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.response.notification.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.sendnotification.SendNotificationRequest;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.NotificationResponse;
+import br.com.vibbra.notificationservice.controller.response.sendnotification.HistoryNotification;
 import br.com.vibbra.notificationservice.db.AppRepository;
 import br.com.vibbra.notificationservice.db.EmailRepository;
-import br.com.vibbra.notificationservice.db.EmailTemplateRepository;
 import br.com.vibbra.notificationservice.db.NotificationConfigRepository;
+import br.com.vibbra.notificationservice.db.NotificationHistoryRepository;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.NotificationConfigEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.email.EmailEntity;
@@ -16,10 +18,10 @@ import br.com.vibbra.notificationservice.exceptions.SettingsNotFoundException;
 import br.com.vibbra.notificationservice.mapper.EmailEntityMapper;
 import br.com.vibbra.notificationservice.mapper.NotificationResponseMapper;
 import br.com.vibbra.notificationservice.strategy.NotificationStrategy;
+import java.time.LocalDate;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -32,8 +34,9 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
     public EmailNotificationStrategy(
             AppRepository appRepository,
             NotificationConfigRepository configRepository,
-            EmailRepository emailRepository) {
-        super(appRepository, configRepository);
+            EmailRepository emailRepository,
+            NotificationHistoryRepository historyRepository) {
+        super(appRepository, configRepository, historyRepository);
         this.appRepository = appRepository;
         this.emailRepository = emailRepository;
         this.configRepository = configRepository;
@@ -47,7 +50,8 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
                     userId,
                     appId,
                     channel);
-            AppEntity appEntity = appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+            AppEntity appEntity =
+                    appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
             log.info("[Email Add/Updade Configuração] App encontrado {}", appEntity);
             Optional<EmailEntity> entityPresent = emailRepository.findByAppId(appId);
 
@@ -108,6 +112,28 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
         }
     }
 
+    @Override
+    public void sendNotification(
+            Long userId, Long appId, Channel channel, SendNotificationRequest sendNotificationRequest) {
+        validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
+        log.info(
+                "[Email Send Notification] Iniciando o envio de notificação para o usariaId {} appId {} e Canal {}",
+                userId,
+                appId,
+                channel);
+
+        AppEntity appEntity =
+                appRepository.findByIdAndUserId(appId, userId).orElseThrow(() -> new AppNotFoundException());
+        super.saveHistory(appEntity, channel);
+    }
+
+    @Override
+    public HistoryNotification getNotifications(
+            Long userId, Long appId, Channel channel, LocalDate startDate, LocalDate endDate) {
+        validateIfUserHavePermissionToAppAndIfExistsApp(userId, appId);
+        return super.getNotifications(userId, appId, channel, startDate, endDate);
+    }
+
     private void validateIfUserHavePermissionToAppAndIfExistsApp(Long userId, Long appId) {
         log.info("[Email Validacao] Validando se o usariaId {} tem permissão para o appId {}", userId, appId);
         if (!appRepository.existsByIdAndUserId(appId, userId)) {
@@ -139,9 +165,7 @@ public class EmailNotificationStrategy extends BaseNotificationStrategy implemen
                 notification);
         EmailEntity emailEntity = EmailEntityMapper.update(entity, notification);
         EmailEntity save = emailRepository.save(emailEntity);
-        log.info(
-                "[Email Update Configuracao] Finalizado o processo de atualização de configuração {}",
-                save);
+        log.info("[Email Update Configuracao] Finalizado o processo de atualização de configuração {}", save);
     }
 
     @Override

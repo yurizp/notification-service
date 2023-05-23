@@ -1,8 +1,8 @@
 package br.com.vibbra.notificationservice.mapper;
 
-import br.com.vibbra.notificationservice.controller.request.notification.NotificationRequest;
-import br.com.vibbra.notificationservice.controller.request.notification.sms.SmsProvider;
-import br.com.vibbra.notificationservice.controller.request.notification.sms.SmsRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.NotificationRequest;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.sms.SmsProvider;
+import br.com.vibbra.notificationservice.controller.request.notificationsettings.sms.SmsRequest;
 import br.com.vibbra.notificationservice.db.entity.AppEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.sms.SmsProviderEntity;
@@ -11,7 +11,7 @@ import br.com.vibbra.notificationservice.exceptions.InvalidBodyException;
 public class SmsEntityMapper {
 
     public static SmsEntity create(NotificationRequest notification, AppEntity app) {
-        if(!(notification.getSettings() instanceof SmsRequest)) {
+        if (!(notification.getSettings() instanceof SmsRequest)) {
             throw new InvalidBodyException();
         }
         SmsRequest smsRequest = (SmsRequest) notification.getSettings();
@@ -31,7 +31,7 @@ public class SmsEntityMapper {
     }
 
     public static SmsEntity update(SmsEntity entity, NotificationRequest notification) {
-        if(!(notification.getSettings() instanceof SmsRequest)) {
+        if (!(notification.getSettings() instanceof SmsRequest)) {
             throw new InvalidBodyException();
         }
         SmsRequest smsRequest = (SmsRequest) notification.getSettings();

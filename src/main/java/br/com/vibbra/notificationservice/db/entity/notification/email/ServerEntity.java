@@ -26,10 +26,13 @@ public class ServerEntity {
 
     @JsonProperty("smtp_name")
     private String smtpName;
+
     @JsonProperty("smpt_port")
     private String smptPort;
+
     @JsonProperty("user_login")
     private String userLogin;
+
     @JsonProperty("user_password")
     private String userPassword;
 

@@ -20,12 +20,13 @@ import lombok.Setter;
 @Entity(name = "sms_provider")
 public class SmsProviderEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String login;
+
     @ToStringIgnore
     private String password;
 

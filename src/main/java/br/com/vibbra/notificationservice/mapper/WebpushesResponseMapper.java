@@ -1,9 +1,9 @@
 package br.com.vibbra.notificationservice.mapper;
 
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.AllowNotification;
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.Site;
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.WebpushResponse;
-import br.com.vibbra.notificationservice.controller.response.notification.webpush.WelcomeNotification;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.AllowNotification;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.Site;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.WebpushResponse;
+import br.com.vibbra.notificationservice.controller.response.notificationsettings.webpush.WelcomeNotification;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.AllowNotificationEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.SiteEntity;
 import br.com.vibbra.notificationservice.db.entity.notification.webpush.WebpushEntity;
